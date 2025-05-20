@@ -6,6 +6,21 @@ const supabase = createClient(
 );
 
 module.exports = async (req, res) => {
+  // ✅ Tambahkan headers CORS
+const allowedOrigins = ["https://stemation-student.vercel.app"];
+const origin = req.headers.origin;
+if (allowedOrigins.includes(origin)) {
+  res.setHeader("Access-Control-Allow-Origin", origin);
+}
+
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    // Untuk menangani preflight request
+    return res.status(200).end();
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -17,7 +32,7 @@ module.exports = async (req, res) => {
   }
 
   const { data, error } = await supabase
-    .from("submissions")    
+    .from("submissions")
     .insert([{ nama, absen, score }])
     .select()
     .single();
