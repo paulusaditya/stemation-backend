@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   }
 
   const { data, error } = await supabase
-    .from("submissions")
+    .from("submissions")    
     .insert([{ nama, absen, score }])
     .select()
     .single();
